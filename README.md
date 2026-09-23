@@ -1,2 +1,5 @@
 # InfectedVoices-Web
-Infected Voices browser studio + /get download pages (consumes Core)
+
+Browser studio + `/get` download hub.
+Consumes shared **InfectedVoices** (Core) web payload.
+Do not fork DSP — depend on Core.
