@@ -1,0 +1,855 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#100d17" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>Infected Voices • Browser Studio</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="../resources/infected-voices-icon.png"
+    />
+    <link rel="apple-touch-icon" href="../resources/infected-voices-icon.png" />
+    <link rel="manifest" href="../manifest.webmanifest" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="apple-mobile-web-app-title" content="Infected Voices" />
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+      :root {
+        color-scheme: dark;
+        font-family: 'DM Sans', sans-serif;
+        background: #100d17;color:#eeeaf4;--muted:#a49aad;
+        --line: #302738;
+        --purple: #ba8aff;
+        --panel: #1a1522;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+      }
+      button,
+      input,
+      select {
+        font: inherit;
+      }
+      button,
+      .button {
+        border: 1px solid #493851;
+        background: #2a2036;
+        color: #f3eefa;
+        border-radius: 9px;
+        padding: 11px 14px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 13px;
+        min-height: 42px;
+      }
+      button:hover,
+      .button:hover {
+        border-color: #b987ef;
+        background: #382445;
+      }
+      button:disabled {
+        opacity: 0.4;
+        cursor: wait;
+      }
+      button:focus-visible,
+      input:focus-visible,
+      select:focus-visible,
+      summary:focus-visible,
+      canvas:focus-visible {
+        outline: 2px solid #d1a8ff;
+        outline-offset: 3px;
+      }
+      .primary {
+        background: #bd91f6;
+        color: #160b22;
+        border-color: #bd91f6;
+      }
+      .primary:hover {
+        background: #d2afff;
+      }
+      .record {
+        background: #3b1c2e;
+        border-color: #7a354a;
+        color: #ffa7b6;
+      }
+      .record.active {
+        background: #a32344;
+        color: white;
+      }
+      .ghost {
+        background: transparent;
+      }
+      a {
+        color: #cfabfb;
+      }
+      header {
+        padding: 23px max(24px, calc((100vw - 1400px) / 2));
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #14101b;
+      }
+      .logo {
+        color: #dcc4fc;
+        text-decoration: none;
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 30px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 13px;
+      }
+      .logo span {
+        font-size: 15px;
+        letter-spacing: 1.6px;
+      }
+      .logo small {
+        display: block;
+        color: var(--muted);
+        font-size: 9px;
+        margin-top: 5px;
+        letter-spacing: 1.4px;
+      }
+      .local {
+        font-size: 10px;
+        color: #b6d4b8;
+        letter-spacing: 1.3px;
+      }
+      main {
+        max-width: 1448px;
+        margin: auto;
+        padding: 34px 24px;
+      }
+      .intro {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 26px;
+      }
+      .eyebrow {
+        font-size: 10px;
+        letter-spacing: 2.7px;
+        color: var(--purple);
+      }
+      h1 {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 40px;
+        letter-spacing: -1.7px;
+        margin: 8px 0;
+      }
+      p {
+        color: var(--muted);
+        line-height: 1.6;
+        font-size: 13px;
+        margin: 8px 0 16px;
+      }
+      .intro p {
+        margin: 0;
+        font-size: 14px;
+      }
+      .projectbar {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .projectbar input {
+        flex: 1;
+        min-width: 180px;
+      }
+      input:not([type='range']):not([type='checkbox']),
+      select {
+        background: #120f19;
+        border: 1px solid #3a2f44;
+        color: #eee9f6;
+        border-radius: 7px;
+        padding: 10px;
+        min-height: 42px;
+        min-width: 0;
+        width: 100%;
+      }
+      input[type='checkbox'] {
+        accent-color: var(--purple);
+        width: 16px;
+        height: 16px;
+        vertical-align: middle;
+      }
+      input[type='range'] {
+        width: 100%;
+        accent-color: var(--purple);
+        cursor: pointer;
+      }
+      label {
+        font-size: 11px;
+        color: #b9adc5;
+        display: block;
+      }
+      label input:not([type='checkbox']),
+      label select {
+        margin-top: 7px;
+      }
+      #status {
+        margin: 18px 0;
+        padding: 12px 16px;
+        border: 1px solid #3a2b47;
+        background: #21172b;
+        border-radius: 8px;
+        font-size: 12px;
+        color: #d7b9f6;
+        min-height: 42px;
+      }
+      .workspace {
+        display: grid;
+        grid-template-columns: minmax(0, 1.5fr) minmax(320px, 1fr);
+        gap: 20px;
+      }
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        padding: 23px;
+        border-radius: 15px;
+        min-width: 0;
+      }
+      .sectionhead {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 22px;
+      }
+      h2 {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 17px;
+        font-weight: 500;
+        margin: 0;
+      }
+      h2 span {
+        font-size: 11px;
+        color: #ac80e0;
+        padding-right: 9px;
+      }
+      h3 {
+        font-size: 13px;
+        letter-spacing: 0.2px;
+        margin: 23px 0 12px;
+      }
+      h3 span {
+        color: var(--purple);
+      }
+      .tag {
+        font-size: 8px;
+        letter-spacing: 1px;
+        border: 1px solid #473250;
+        border-radius: 5px;
+        padding: 6px;
+        color: #cfadf2;
+      }
+      .imports,
+      .transport,
+      .toggles {
+        display: flex;
+        gap: 9px;
+        flex-wrap: wrap;
+        margin: 15px 0;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+        align-items: end;
+        gap: 12px;
+        margin: 15px 0;
+      }
+      .hint,
+      small {
+        font-size: 11px;
+        color: #93869f;
+        line-height: 1.6;
+      }
+      .waveWrap {
+        position: relative;
+        background: #100d16;
+        border: 1px solid #392847;
+        border-radius: 9px;
+        overflow: hidden;
+        margin: 17px 0;
+      }
+      canvas {
+        width: 100%;
+        display: block;
+        height: 160px;
+        touch-action: manipulation;
+        cursor: crosshair;
+      }
+      #clock {
+        position: absolute;
+        right: 10px;
+        top: 8px;
+        font-family: monospace;
+        font-size: 11px;
+        color: #dbc5f6;
+        background: #100d16bb;
+        padding: 4px;
+      }
+      .meter {
+        height: 5px;
+        background: #100d16;
+        border-radius: 9px;
+        overflow: hidden;
+        margin: 14px 0 4px;
+      }
+      #meterFill {
+        height: 100%;
+        background: #a7d8a1;
+        width: 0;
+        transition: width 0.08s;
+      }
+      .loops {
+        grid-template-columns: 1fr auto 1fr auto;
+      }
+      .list {
+        display: grid;
+        gap: 9px;
+      }
+      .empty {
+        font-size: 12px;
+        color: #7f718b;
+        padding: 20px 10px;
+        border: 1px dashed #3d3049;
+        border-radius: 9px;
+      }
+      .clip,
+      .take {
+        background: #120f1a;
+        padding: 12px;
+        border: 1px solid #34273f;
+        border-radius: 9px;
+        display: flex;
+        gap: 7px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .clip strong,
+      .take strong {
+        font-size: 12px;
+        flex: 1;
+        min-width: 100px;
+        overflow-wrap: anywhere;
+      }
+      .clip button,
+      .take button {
+        padding: 7px 10px;
+        font-size: 11px;
+        min-height: 34px;
+      }
+      .clip label {
+        max-width: 92px;
+      }
+      .clip input[type='number'] {
+        padding: 5px;
+        min-height: 30px;
+      }
+      .presets {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 17px;
+      }
+      .presets button {
+        font-size: 11px;
+        padding: 9px 12px;
+        min-height: 35px;
+      }
+      .presets .selected {
+        border-color: #b386ee;
+        background: #39224b;
+        color: #e4c9ff;
+      }
+      .control {
+        margin: 18px 0;
+      }
+      .control > label {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 12px;
+        color: #c6b9d2;
+      }
+      .control output {
+        color: #d8b5ff;
+        font-family: monospace;
+        font-size: 11px;
+      }
+      details {
+        border-top: 1px solid #35273e;
+        margin-top: 22px;
+        padding-top: 15px;
+      }
+      summary {
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        line-height: 1.7;
+        color: #d5c5e2;
+      }
+      .mixbox {
+        margin-top: 22px;
+        padding: 16px;
+        background: #25182f;
+        border: 1px solid #483154;
+        border-radius: 10px;
+      }
+      .mixbox h3 {
+        margin: 0 0 7px;
+      }
+      .mixbox p {
+        font-size: 11px;
+        margin-bottom: 12px;
+      }
+      .wide {
+        width: 100%;
+        margin: 6px 0;
+      }
+      .timing p {
+        font-size: 12px;
+      }
+      audio {
+        max-width: 100%;
+        height: 42px;
+      }
+      .sectionRow {
+        font-size: 11px;
+        padding: 8px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .sectionRow button {
+        padding: 5px;
+        min-height: 30px;
+      }
+      #help {
+        margin: 22px 0;
+      }
+      li {
+        font-size: 13px;
+        line-height: 1.9;
+        color: var(--muted);
+      }
+      footer {
+        margin: 26px 0 5px;
+        color: #8e7f9c;
+        letter-spacing: 1px;
+        font-size: 10px;
+      }
+      footer span {
+        color: #c0a2de;
+      }
+      body.busy {
+        cursor: progress;
+      }
+      @media (max-width: 780px) {
+        main {
+          padding: 24px 14px;
+        }
+        .workspace {
+          grid-template-columns: 1fr;
+        }
+        .panel {
+          padding: 18px;
+        }
+        .intro {
+          align-items: flex-start;
+        }
+        .intro button {
+          font-size: 11px;
+        }
+        h1 {
+          font-size: 30px;
+        }
+        .local {
+          display: none;
+        }
+        header {
+          padding: 20px;
+        }
+        .projectbar button,
+        .projectbar .button {
+          flex: 1;
+        }
+        .projectbar input {
+          flex-basis: 100%;
+        }
+        .loops {
+          grid-template-columns: 1fr 1fr;
+        }
+        .sectionhead {
+          margin-bottom: 16px;
+        }
+        .tag {
+          display: none;
+        }
+        .grid {
+          gap: 9px;
+        }
+        .logo span {
+          font-size: 13px;
+        }
+        .intro p {
+          font-size: 12px;
+        }
+        .control {
+          margin: 22px 0;
+        }
+      }
+      [hidden] {
+        display: none !important;
+      }
+      .account {
+        max-width: 1400px;
+        margin: 24px auto;
+      }
+      .account input {
+        max-width: 650px;
+      }
+      .license {
+        border-top: 1px solid #3b2c48;
+        padding: 16px 0;
+      }
+      .license strong {
+        display: block;
+      }
+      .license code {
+        display: block;
+        overflow-wrap: anywhere;
+        font-size: 11px;
+        padding: 10px;
+        background: #120f19;
+        border-radius: 6px;
+        margin: 9px 0;
+      }
+      .license small {
+        display: block;
+      }
+      .account #ownerPanel {
+        margin-top: 24px;
+      }
+      @media (max-width: 1450px) {
+        .account {
+          margin: 20px 14px;
+        }
+      }
+
+      .auth-pending > header,
+      .auth-pending > .windowsCard,.auth-pending>.hint,.auth-pending>#account,
+      .auth-pending > main,
+      .auth-pending > footer {
+        display: none !important;
+      }
+      .labLoginWall {
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 80px 18px 30px;
+        background:
+          radial-gradient(circle at 75% 5%, #2b1740 0, transparent 34%), #100d17;
+      }
+      .labLoginPanel {
+        width: min(760px, 100%);
+        text-align: center;
+        background: #17111f;
+        border: 1px solid #44314f;
+        border-radius: 24px;
+        padding: clamp(34px, 6vw, 68px);
+        box-shadow: 0 24px 80px #0008;
+      }
+      .labLoginPanel h1 {
+        font-size: clamp(38px, 7vw, 70px);
+        line-height: 1;
+      }
+      .labWrench {
+        position: fixed;
+        z-index: 2000;
+        top: max(14px, env(safe-area-inset-top));
+        left: max(14px, env(safe-area-inset-left));
+        width: 44px;
+        height: 44px;
+        padding: 0;
+      }
+      .labDeviceMenu {
+        position: fixed;
+        z-index: 2100;
+        top: 68px;
+        left: 14px;
+        width: min(330px, calc(100vw - 28px));
+        background: #17101ff7;
+        border: 1px solid #493650;
+        border-radius: 15px;
+        padding: 15px;
+        box-shadow: 0 20px 60px #0009;
+      }
+      .labDeviceMenu .grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      textarea {
+        width: 100%;
+        min-height: 92px;
+        background: #120f19;
+        border: 1px solid #3a2f44;
+        color: #eee9f6;
+        border-radius: 7px;
+        padding: 10px;
+        font: inherit;
+        resize: vertical;
+      }
+      #aiCoachResult {
+        white-space: pre-wrap;
+        color: #d8c9e3;
+        font-size: 12px;
+        line-height: 1.65;
+      }
+      body[data-device-mode='ios'] main {
+        padding-bottom: 110px;
+      }
+      body[data-device-mode='ios'] button {
+        min-height: 46px;
+      }
+      body[data-device-mode='android'] button {
+        border-radius: 14px;
+      }
+      body[data-device-mode='pc'] main {
+        max-width: 1500px;
+      }
+    </style>
+  </head>
+  <body class="auth-pending">
+  <button id="labWrench" class="labWrench" aria-label="Device layout settings">🔧</button>
+  <aside id="labDeviceMenu" class="labDeviceMenu" hidden><strong>Interface mode</strong><p>Optimize the Studio layout for your device.</p><div class="grid"><button data-lab-mode="auto">Auto</button><button data-lab-mode="ios">iOS</button><button data-lab-mode="android">Android</button><button data-lab-mode="pc">PC</button></div><small id="labDeviceStatus"></small></aside>
+  <section id="labLoginWall" class="labLoginWall"><div class="labLoginPanel"><span class="eyebrow">INFECTED VOICES · BROWSER STUDIO</span><h1>Sign in with Google to open Studio.</h1><p>The recording workspace stays hidden until you sign in. Studio still requires an active subscription or lifetime artist code.</p><button id="labSignInHero" class="primary">Sign in with Google</button><p id="labLoginStatus" class="hint" role="status"></p><a class="button ghost" href="../">Back to portal</a></div></section>
+  <header><a class="logo" href="../">IV<span>INFECTED VOICES<small>GRIM-VIRUs / BROWSER STUDIO BETA</small></span></a
+      ><span class="local">● LOCAL RECORDING · OPTIONAL ROEX AI UPLOAD</span>
+    </header>
+
+    <section class="panel windowsCard" id="windows" hidden>
+  <div class="sectionhead"><h2>Windows studio</h2><span class="tag">UPDATES</span></div>
+  <p id="windowsStatus">Install the complete Windows studio for local recording, then use its built-in updater for future releases.</p>
+  <a class="button primary" href="../#windows"
+        >Protected Windows downloads</a
+      >
+      <a class="button ghost" href="../#windows">Release notes & update manifest ↗</a>
+</section>
+<p class="hint">Account safety notice: studio visits register your email, available profile name and gateway connection IP for owner moderation. Up to 100 recent browser control requests are retained. Recordings, lyrics and files are not included. Location may be unavailable. Bans restrict studio access; subscription cancellation remains separate.</p><section id="account" class="panel account" hidden>
+  <div class="sectionhead"><h2>Studio account</h2><span class="tag">FOGSPIT ACCESS</span></div>
+  <p id="accountStatus" role="status">Sign in to open your vocal lab.</p>
+  <div class="transport"><button id="signIn" class="primary">Continue with Google</button><button id="signOut" hidden>Sign out</button><button id="refreshAccess">Retry / refresh access</button><button id="recovery" hidden>Download recovery project</button></div>
+  <p id="signupNote" class="hint">First time? Continue with Google to create your studio account. Use the email your FogSpit code is assigned to.</p>
+  <div id="membership" hidden>
+    <h3>Infected Voices Studio · $20/month</h3>
+    <p>Recurring monthly subscription. Cancel through Manage subscription. FogSpit artist codes provide free lifetime access unless revoked by the owner.</p>
+    <div class="transport"><button id="subscribe" class="primary">Subscribe · $20/month</button><button id="billing">Manage subscription</button></div>
+    <label>FogSpit artist code<input id="redeemCode" autocomplete="off"
+            placeholder="Paste your code"
+        /></label>
+        <button id="redeem">Redeem code</button>
+  </div>
+  <details id="ownerPanel" hidden>
+    <summary>Owner page · FogSpit artists</summary>
+    <div class="grid"><label>Artist name<input id="artistName"
+              maxlength="80"
+              placeholder="Artist name" /></label
+          ><label
+            >Allowed email<input id="artistEmail" type="email" placeholder="artist@gmail.com"
+              maxlength="254"
+          /></label>
+        </div>
+        <button id="generateCode" class="primary">Generate & save code</button><button id="refreshCodes">Refresh codes</button>
+    <p class="hint">Codes are saved automatically with the artist name and email. Revocation removes free access at the next check, within about a minute in an open session. A separate paid subscription remains valid.</p>
+    <div id="ownerCodes"></div><button id="moreCodes" hidden>More artists</button>
+  </details>
+</section>
+<main id="studioShell" hidden>
+    <div class="intro"><div><span class="eyebrow">MAKE YOUR VOICE YOURS</span><h1>Enter the vocal lab.</h1><p>Drop a beat. Find your flow. Build your sound.</p></div><button id="helpButton" class="ghost">Quick guide ↗</button></div>
+    <div class="projectbar">
+      <input id="title" aria-label="Project title" value="My infected session"
+          maxlength="80"
+        />
+        <button id="save">Save on device</button><button id="load">Restore saved</button>
+      <button id="backup">Download project</button><label class="button ghost">Open project<input id="openProject" type="file"
+            accept=".ivweb"
+            hidden
+        /></label>
+      </div>
+      <div id="status" role="status" aria-live="polite">Ready. Start with a beat, or record an acapella.</div>
+    <div class="workspace">
+      <section class="panel arrange">
+        <div class="sectionhead"><h2><span>01</span> Record & arrange</h2><button id="demo" class="ghost">Load test session</button></div>
+        <div class="imports"><label class="button primary">＋ Import beat<input id="beatFile" type="file"
+                accept="audio/*"
+                hidden /></label
+            ><label class="button">＋ Import vocals<input id="vocalFile" type="file"
+                accept="audio/*"
+                multiple
+                hidden
+            /></label>
+          </div>
+          <div class="grid">
+          <label>Tempo / BPM<input id="bpm" type="number" min="30"
+                max="300"
+                value="150"
+            /></label>
+            <label
+              >Grid start / seconds<input id="gridOffset" type="number" step="0.01"
+                min="0"
+                value="0"
+            /></label>
+            <label
+              >Cursor / seconds<input id="cursor" type="number" step="0.01"
+                min="0"
+                value="0"
+            /></label>
+          </div>
+          <p class="hint">Match BPM and grid start to the beat before correcting timing. Tap the waveform to place the cursor.</p>
+        <div class="waveWrap"><canvas id="wave" height="160" aria-label="Song waveform; tap to seek" tabindex="0"></canvas><span id="clock">0:00.00</span></div>
+        <div class="transport"><button id="play" class="primary">▶ Play</button><button id="stop">■ Stop</button><button id="record" class="record">● Record</button><button id="mic">Enable mic</button></div>
+        <div class="toggles"><label><input id="metronome" type="checkbox" /> Metronome</label
+            ><label
+              ><input id="monitor" type="checkbox" /> Hear live effects</label
+            ><label><input id="loop" type="checkbox" /> Loop recording</label>
+          </div>
+          <div class="meter"><div id="meterFill"></div></div><small id="micInfo">Use headphones. The metronome is excluded from recorded audio.</small>
+        <div class="grid loops">
+          <label>A / start (seconds)<input id="loopStart" type="number" min="0" step="0.01"
+                value="0"
+            /></label>
+            <button id="setA" class="ghost">Set A at cursor</button>
+          <label>B / end (seconds)<input id="loopEnd" type="number" min="0.1" step="0.01"
+                value="1.6"
+            /></label>
+            <button id="setB" class="ghost">Set B at cursor</button>
+        </div>
+        <div class="grid"><label>Recording compensation / ms<input id="latency" type="number" min="-500" max="500"
+                step="1"
+                value="0" /></label
+            ><button id="oneBar" class="ghost">Set one-bar loop at cursor</button></div>
+        <p class="hint">Each loop pass becomes a separate take when you stop. Audition one, then insert it. Positive compensation moves recorded vocals earlier.</p>
+        <h3>Take rack <span id="takeCount">0</span></h3><div id="takes" class="list empty">Your recorded takes will appear here.</div>
+        <h3>Project vocals</h3><div id="clips" class="list empty">Import vocals or insert a take to begin.</div>
+      </section>
+      <section class="panel sound">
+        <div class="sectionhead"><h2><span>02</span> Shape your voice</h2><span class="tag">LIVE + RECORDED</span></div>
+        <div id="presets" class="presets"></div>
+        <div class="grid"><label>Root note<select id="root"></select></label><label>Scale<select id="scale"><option value="minor">Minor</option><option value="major">Major</option><option value="chromatic">Chromatic</option><option value="pentatonic">Minor pentatonic</option></select></label></div>
+        <div id="basicControls"></div>
+        <details><summary>Advanced sound controls</summary><div id="advancedControls"></div><p class="hint">Body is low-shelf EQ. Deep pitch and octave layers create the Grim sound; extreme values can sound synthetic.</p></details>
+        <div class="grid"><input id="presetName" aria-label="Custom preset name" placeholder="Name your custom sound"
+              maxlength="50"
+            /><button id="savePreset">Save custom</button></div>
+        <div id="customPresets" class="presets"></div>
+        <details><summary>Follow different parts of the beat</summary><p class="hint">Select A–B, estimate its key, check by ear, then add it to the song map. Those sections control tuning during playback, recording and export.</p>
+          <button id="detectKey">Estimate key in A–B</button><button id="addSection">Use current key for A–B</button><div id="sections"></div>
+        </details>
+        <div class="mixbox"><h3>Ultimate Mic Master</h3><p>Pick a style, then tune the loudness, headroom, ducking, stereo width and tone controls used by the final render. The balance button measures your tracks before applying the selected starting point.</p><label>Mix / mastering style<select id="masterProfile"><option>Rap</option><option>Hip-hop</option><option>Trap</option><option>Rock</option><option>Metal</option><option>Dubstep / EDM</option><option>Grim glitchstep</option><option>Acapella / vocal</option></select></label><div id="masterControls" class="grid"><label>Target RMS proxy / dB<input id="masterTargetDb" type="range" min="-24" max="-8" step="0.5"
+                  value="-12" /><output id="masterTargetDbOut"></output></label><label>Ceiling / dB<input id="masterCeiling" type="range" min="-6" max="-0.1" step="0.1"
+                  value="-0.1" /><output id="masterCeilingOut"></output></label><label>Glue compression<input id="masterCompression" type="range" min="0" max="1" step="0.01"
+                  value="0.45" /><output
+                  id="masterCompressionOut"
+                ></output></label><label>Vocal level / dB<input id="masterVocalLevel" type="range" min="-12" max="12" step="0.5"
+                  value="0" /><output id="masterVocalLevelOut"></output></label><label>Beat level / dB<input id="masterBeatLevel" type="range" min="-12" max="12" step="0.5"
+                  value="0" /><output id="masterBeatLevelOut"></output></label><label>Vocal ducking<input id="masterDucking" type="range" min="0" max="0.65" step="0.01"
+                  value="0.18" /><output id="masterDuckingOut"></output></label><label>Stereo width<input id="masterWidth" type="range" min="0" max="1.5" step="0.01"
+                  value="1.06" /><output id="masterWidthOut"></output></label><label>Master drive<input id="masterDrive" type="range" min="0" max="0.35" step="0.01"
+                  value="0.04" /><output id="masterDriveOut"></output></label><label>Air EQ / dB<input id="masterAir" type="range" min="-3" max="3" step="0.1"
+                  value="0" /><output id="masterAirOut"></output></label><label>Master low-cut / Hz<input id="masterLowCut" type="range" min="20" max="180"
+                  step="1"
+                  value="28" /><output id="masterLowCutOut"></output></label></div><label><input id="tuneWithMix" type="checkbox" checked /> Enable pitch
+              correction when balancing</label
+            >
+            <p class="hint">Uses the selected song key and section keys. Enables 70% correction if tuning is off; otherwise keeps your tuning amount. Preview before export. Undo mix restores the previous tuning.</p><button id="master" class="primary wide">✦ Analyze & balance mix</button><button id="undoMaster" class="ghost">Undo mix balance</button></div>
+        <div class="grid"><label>Beat volume<input id="beatGain" type="range" min="0" max="1.5" step="0.01"
+                value="0.65" /></label
+            ><label
+              ><input id="acapella" type="checkbox" /> Export / play vocals
+              only</label
+            >
+          </div>
+      </section>
+      <section class="panel timing">
+        <div class="sectionhead"><h2><span>03</span> Lock in the flow</h2></div>
+        <p>Choose the beat style, confirm BPM and key, then preview a conservative onset correction. It moves detected syllable starts toward the grid while protecting transients; always audition the result.</p>
+        <p class="hint"><strong id="pocketBeatSummary">150 BPM · G minor</strong> — beat timing map. Edit Tempo / BPM and Root note / Scale above to match the beat before previewing.</p>
+        <label>Vocal to edit<select id="selectedClip"><option value="">No vocals yet</option></select></label>
+        <label>Timing profile<select id="pocketProfile"><option>Rap</option><option>Hip-hop</option><option>Trap</option><option>Rock</option><option>Metal</option><option>Dubstep / EDM</option><option>Grim glitchstep</option><option>Singing / ballad</option></select></label>
+        <div class="grid"><label>Correction mode<select id="pocketMode"><option value="conservative">Conservative · preserve groove</option><option value="full">Full correction · strongest safe snap</option></select></label><label>Grid<select id="division"><option value="4">Quarter notes</option><option value="8">Eighth notes</option><option value="16" selected>Sixteenth notes</option><option value="12">Eighth-note triplets</option></select></label><label>Strength<input id="strength" type="range" min="0" max="1" step="0.01"
+                value="0.7" /><output id="strengthOut"></output></label><label>Maximum move / ms<input id="maxMove" type="number" min="5"
+                max="250"
+                value="65"
+            /></label>
+          </div>
+          <div class="grid"><label>Swing / %<input id="pocketSwing" type="range" min="-0.35" max="0.35" step="0.01"
+                value="0" /><output id="pocketSwingOut"></output></label><label>Onset sensitivity<input id="pocketSensitivity" type="range" min="0.03" max="0.8" step="0.01"
+                value="0.14" /><output
+                id="pocketSensitivityOut"
+              ></output></label><label>Transient protection<input id="pocketPreserve" type="range" min="0" max="1" step="0.01"
+                value="0.75" /><output id="pocketPreserveOut"></output></label><label>Minimum onset gap / ms<input id="pocketGap" type="number" min="25"
+                max="250"
+                value="90"
+            /></label>
+          </div>
+          <button id="align" class="primary">Rap on beat · preview</button><button id="applyAlign">Keep correction</button><button id="undoAlign" class="ghost">Restore original timing</button>
+        <div class="grid"><label>Nudge / ms<input id="nudgeMs" type="number" value="10"
+                min="1"
+                max="1000" /></label
+            ><button id="earlier">← Earlier</button><button id="later">Later →</button></div>
+        <p class="hint">Conservative protects the original groove. Full correction makes stronger safe snaps and permits larger moves while preserving each vocal segment and the untouched original. Audition before keeping it.</p>
+      </section>
+      <section class="panel export">
+        <div class="sectionhead"><h2><span>04</span> Finish your track</h2></div>
+        <div class="grid"><label>Format<select id="format"><option value="wav24">WAV · 24 bit</option><option value="wav16">WAV · 16 bit</option><option value="mp3">MP3</option></select></label><label>MP3 quality<select id="bitrate"><option>320</option><option>256</option><option>192</option><option>128</option></select></label></div>
+        <label>Selected vocal stem<select id="stemKind"><option value="dry">Dry vocal at current timing</option><option value="processed">Processed vocal at current timing</option></select></label><button id="exportStem" class="ghost wide">Export selected vocal for another DAW</button><p class="hint">24-bit WAV with its position preserved by leading silence. Import at the start of an FL Studio or GarageBand project. Upload your finished mix manually to your distributor or artist platform; this does not link accounts.</p><button id="export" class="primary wide">Render & download mix ↗</button>
+        <button id="previewMix" class="ghost wide">Preview final mix</button>
+        <audio id="preview" controls class="wide"></audio>
+        <p class="hint">44.1 kHz stereo export with sample-peak headroom. Clicks are excluded. Supported exports: WAV and MP3.</p>
+        <p class="hint">Save on device keeps one working project in this browser. Download project makes a portable backup; browsers may clear local storage.</p>
+      </section>
+    </div>
+    <details id="help" class="panel">
+      <summary>Quick guide, mobile access & beta limits</summary>
+      <ol><li>Import a beat and set its BPM. Use grid start if it has silence before the first beat.</li><li>Choose your voice preset and the song key. Start with Clean rap or Singing; Grim abyss is intentionally extreme.</li><li>Enable the mic, allow permission, and use wired headphones. Hear live effects can add audible latency.</li><li>Choose A and B, turn on Loop recording and Metronome, then record. Stop, audition your takes, and insert the best one.</li><li>Set clip start times or nudge vocals. Preview Rap on beat corrections before keeping them.</li><li>Analyze & balance, listen to the final mix, save the project and export.</li></ol>
+      <p>On iPhone, iPad or Android, open this HTTPS page directly in Safari or Chrome, then use Add to Home Screen for an app-like window. Files are
+          imported from your device and audio is processed here. Local controls
+          do not upload audio. Infected Mixer sends vocals and beat to RoEx only
+          after you confirm. A downloaded Windows folder does not run on a
+          phone. Internet is required for sign-in and access checks. The Windows
+          app shares this Studio and loads updates when reopened.
+        </p>
+        <p>
+          Desktop private projects are not converted here. WAV or other browser-decodable vocals can be imported. Real hardware latency, background recording and Bluetooth behavior vary by device. Keep this page foregrounded while recording; a hidden page stops capture to protect your takes.</p>
+      <p>Live tuning uses monophonic pitch estimation and granular pitch shifting. Distorted audio, chords and noisy recordings can confuse it. Key estimates need ear checking. Pocket uses BPM, key, style, grid, swing, sensitivity and transient protection to make a best-effort timing correction; no algorithm can guarantee perfect placement for every performance. Master styles provide repeatable render settings and peak protection, not a guarantee of commercial mastering.</p>
+      <p>MP3 encoding: <a href="https://github.com/shijinyu/lamejs" target="_blank" rel="noopener">lamejs</a>, LGPL-3.0. <a href="https://www.gnu.org/licenses/lgpl-3.0.html" target="_blank" rel="noopener">License</a>.</p>
+    </details>
+  <footer>INFECTED VOICES <span>by GRIM-VIRUs</span> · Browser studio beta · <a href="../">Desktop update portal</a></footer>
+  </main>
+  <script type="module" src="./account-entry.js"></script>
+  
+    <script src="../auth-choices.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,14 @@
+{
+  "product": "InfectedVoicesStudio",
+  "protocol": 1,
+  "version": "0.6.6-core6.1",
+  "sequence": 2026092105,
+  "projectFormat": 1,
+  "notes": [
+    "Core 1/2 recording protection, project recovery, comping and delivery.",
+    "Core 3 vocal buses, EQ, compression and shared effects.",
+    "Core 4 Precision Tune and Precision Pocket editing.",
+    "Core 5 automation lanes, sidechain ducking, GRIM bus character and measured loudness / true-peak mastering.",
+    "Core 6 revisioned collaboration, track ownership, resumable integrity-checked audio, offline queues, presence and voice signaling."
+  ]
+}
