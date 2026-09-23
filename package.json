@@ -1,0 +1,12 @@
+{
+  "name": "infectedvoices-web",
+  "private": true,
+  "version": "0.7.0",
+  "description": "Infected Voices browser studio and /get download hub. Consumes InfectedVoices Core.",
+  "type": "module",
+  "scripts": {
+    "sync": "node scripts/sync-core.mjs",
+    "start": "node scripts/serve.mjs",
+    "verify": "node scripts/verify-shell.mjs"
+  }
+}

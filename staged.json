@@ -1,0 +1,9 @@
+{
+  "repository": "https://github.com/grimvirusoffical-source/InfectedVoices.git",
+  "pin": "2fb04c2ce1ac4e49ea9105207f436b8b6cf1d80d",
+  "label": "Stress CLEAR BAR PASS Cap PR #3",
+  "browserBuild": "npm run build:browser",
+  "voices": "browser-dist",
+  "get": "download/index.html",
+  "download": "download/index.html"
+}

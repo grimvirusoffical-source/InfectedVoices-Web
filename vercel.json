@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    { "source": "/voices", "destination": "/voices/", "permanent": false }
+  ],
+  "rewrites": [
+    { "source": "/get", "destination": "/get/index.html" },
+    { "source": "/download", "destination": "/download/index.html" }
+  ]
+}
