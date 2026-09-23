@@ -2,6 +2,7 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { withHonestWindows } from './honest-windows.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const pinFile = JSON.parse(await fs.readFile(path.join(root, 'core-pin.json'), 'utf8'));
@@ -72,7 +73,7 @@ await fs.cp(browserDist, voices, {
 await fs.rm(path.join(voices, 'get'), { recursive: true, force: true });
 await fs.rm(path.join(voices, 'download'), { recursive: true, force: true });
 
-const downloadPage = await fs.readFile(path.join(coreDir, 'download', 'index.html'));
+const downloadPage = withHonestWindows(await fs.readFile(path.join(coreDir, 'download', 'index.html'), 'utf8'));
 await fs.mkdir(path.join(root, 'get'), { recursive: true });
 await fs.mkdir(path.join(root, 'download'), { recursive: true });
 await fs.writeFile(path.join(root, 'get', 'index.html'), downloadPage);

@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { WINDOWS_BODY, WINDOWS_CTA, WINDOWS_RELEASES_URL, claimsSignedOrSha, withHonestWindows } from './honest-windows.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const pinFile = JSON.parse(await fs.readFile(path.join(root, 'core-pin.json'), 'utf8'));
@@ -34,6 +35,21 @@ const requiredPhrases = [
 for (const phrase of requiredPhrases) {
   if (!page.includes(phrase)) fail(`Download page is missing: ${phrase}`);
 }
+if (!page.includes(WINDOWS_BODY)) fail(`Download page is missing: ${WINDOWS_BODY}`);
+if (!page.includes(`>${WINDOWS_CTA}<`)) fail(`Download page is missing the ${WINDOWS_CTA} call to action.`);
+if (!page.includes(`href="${WINDOWS_RELEASES_URL}"`)) fail(`Download page is missing ${WINDOWS_RELEASES_URL}.`);
+if (claimsSignedOrSha(page)) {
+  fail('Download page claims Signed or SHA-256 before InfectedVoices-Windows Releases has a real Authenticode installer.');
+}
+
+const rewritten = withHonestWindows(`<article>
+      <h2>Windows</h2>
+      <p>The Windows build is signed. Its SHA-256 is published beside that installer. The GitHub source zipball is source, not the Windows app.</p>
+    </article>`);
+if (claimsSignedOrSha(rewritten)) fail('Sync rewrite still leaves a Signed or SHA-256 Windows claim.');
+if (!rewritten.includes(WINDOWS_BODY) || !rewritten.includes(`href="${WINDOWS_RELEASES_URL}"`)) {
+  fail('Sync rewrite does not produce the unprovisioned Windows Releases copy.');
+}
 
 const readme = await fs.readFile(path.join(root, 'README.md'), 'utf8');
 for (const phrase of [
@@ -52,7 +68,10 @@ for (const phrase of [
   '.app',
   'build:browser',
   'Windows',
-  'EAS'
+  'EAS',
+  WINDOWS_BODY,
+  WINDOWS_CTA,
+  WINDOWS_RELEASES_URL
 ]) {
   if (!readme.includes(phrase)) fail(`README is missing ${phrase}.`);
 }
